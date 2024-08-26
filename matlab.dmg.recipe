@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Create a DMG from a matlab app bundle downloaded with mpm
+
+	Recipe has to be run like this:
+	autopkg run matlab.dmg.recipe -k dmg_root=path_to_matlab_app -k dmg_path=output_path
+	</string>
+	<key>Identifier</key>
+	<string>local.download.matlab</string>
+	<key>Input</key>
+	<dict>
+		<key>MUNKI_CATEGORY</key>
+		<string>Science</string>
+		<key>MUNKI_REPO_SUBDIR</key>
+		<string>apps/matlab</string>
+		<key>NAME</key>
+		<string>Matlab</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>category</key>
+			<string>%MUNKI_CATEGORY%</string>
+			<key>description</key>
+			<string>MATLAB kombiniert eine Desktop-Umgebung für iterative Analysen und Entwicklungsprozesse mit einer Programmiersprache, in der Sie Matrix-basierte Mathematik direkt formulieren können.</string>
+			<key>developer</key>
+			<string>MathWorks</string>
+			<key>display_name</key>
+			<string>Matlab</string>
+			<key>blocking_applications</key>
+			<array>
+				<string>MATLAB_R2015b</string>
+				<string>MATLAB_R2016b</string>
+				<string>MATLAB_R2017a</string>
+				<string>MATLAB_R2017b</string>
+				<string>MATLAB_R2018a</string>
+				<string>MATLAB_R2018b</string>
+				<string>MATLAB_R2019a</string>
+				<string>MATLAB_R2019b</string>
+				<string>MATLAB_R2020a</string>
+				<string>MATLAB_R2020b</string>
+				<string>MATLAB_R2021a</string>
+				<string>MATLAB_R2021b</string>
+				<string>MATLAB_R2022a</string>
+				<string>MATLAB_R2022b</string>
+				<string>MATLAB_R2023a</string>
+				<string>MATLAB_R2023b</string>
+				<string>MATLAB_R2024a</string>
+			</array>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>postinstall_script</key>
+			<string>#!/bin/sh
+# housekeeping: delete all older installations of matlab
+
+matlab_path_arr=(
+"/Applications/MATLAB_R2015b.app/"
+"/Applications/MATLAB_R2016b.app/"
+"/Applications/MATLAB_R2017a.app/"
+"/Applications/MATLAB_R2017b.app/"
+"/Applications/MATLAB_R2018a.app/"
+"/Applications/MATLAB_R2018b.app/"
+"/Applications/MATLAB_R2019a.app/"
+"/Applications/MATLAB_R2019b.app/"
+"/Applications/MATLAB_R2020a.app/"
+"/Applications/MATLAB_R2020b.app/"
+"/Applications/MATLAB_R2021a.app/"
+"/Applications/MATLAB_R2021b.app/"
+"/Applications/MATLAB_R2022a.app/"
+"/Applications/MATLAB_R2022b.app/"
+"/Applications/MATLAB_R2023a.app/"
+"/Applications/MATLAB_R2023b.app/"
+"/Applications/MATLAB_R2024a.app/"
+)
+
+for matlab_path in "${matlab_path_arr[@]}";do
+    echo "Checking for old matlab installation at $matlab_path"
+    if [ -e "$matlab_path" ];then
+        echo "Removing file at: $matlab_path"
+        rm -rf "$matlab_path"
+    fi
+done
+
+exit 0</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.1.0</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict/>
+			<key>Processor</key>
+			<string>DmgCreator</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_path</key>
+				<string>%dmg_path%</string>
+				<key>repo_subdirectory</key>
+				<string>%MUNKI_REPO_SUBDIR%</string>
+			</dict>
+			<key>Processor</key>
+			<string>MunkiImporter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
